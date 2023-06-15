@@ -8,11 +8,17 @@ import {
   ConfigurationServiceClientCredentialFactory,
   ConfigurationBotFrameworkAuthentication,
   TurnContext,
+  MemoryStorage,
 } from "botbuilder";
 
 // This bot's main dialog.
 import { TeamsBot } from "./teamsBot";
 import config from "./config";
+import { AI, Application, ConversationHistory, DefaultPromptManager, DefaultTurnState, OpenAIModerator, OpenAIPlanner } from "@microsoft/teams-ai";
+import path from "path";
+import { Console } from "console";
+import { SendContextCard } from "./context";
+import { ProcessApprovalFromCard, SendApprovalsCard } from "./approvals";
 
 // Create adapter.
 // See https://aka.ms/about-bot-adapter to learn more about adapters.
@@ -52,8 +58,60 @@ const onTurnErrorHandler = async (context: TurnContext, error: Error) => {
 // Set the onTurnError for the singleton CloudAdapter.
 adapter.onTurnError = onTurnErrorHandler;
 
+interface ConversationState {};
+type ApplicationTurnState = DefaultTurnState<ConversationState>;
+
+const planner = new OpenAIPlanner({
+  apiKey: config.openAIKey,
+  defaultModel: 'text-davinci-003',
+  logRequests: true,
+});
+const moderator = new OpenAIModerator({
+  apiKey: config.openAIKey,
+  moderate: 'both',
+});
+const promptManager = new DefaultPromptManager(path.join(__dirname, './prompts'));
+const storage = new MemoryStorage();
+const app = new Application<ApplicationTurnState>({
+  storage,
+  ai: {
+    planner, moderator, promptManager, 
+    prompt: 'chat',
+    history: {
+      assistantHistoryType: 'text',
+    }
+  }
+});
+
+app.ai.action(AI.FlaggedInputActionName, async (context, state, data) => {
+  await context.sendActivity(`I'm sorry your message was flagged: ${JSON.stringify(data)}`);
+  return false;
+});
+
+app.ai.action(AI.FlaggedOutputActionName, async (context, state, data) => {
+  await context.sendActivity(`I'm not allowed to talk about such things.`);
+  return false;
+});
+
+app.ai.action('context', async (context, state, data) => {
+  await SendContextCard(config.glaassApiKey, context);
+  return true;
+});
+app.ai.action('approvals', async (context, state, data) => {
+  await SendApprovalsCard(config.glaassApiKey, context);
+  return true;
+});
+app.adaptiveCards.actionExecute("approved", async (context, state, data) => {
+  return await ProcessApprovalFromCard(config.glaassApiKey, data.caseId, data.stepId, data.outcome, context);
+});
+
+app.message('/history', async (context, state) => {
+  const history = ConversationHistory.toString(state, 2000, '\n\n');
+  await context.sendActivity(history);
+});
+  
 // Create the bot that will handle incoming messages.
-const bot = new TeamsBot(config.glaassApiKey);
+// const bot = new TeamsBot(config.glaassApiKey);
 
 // Create HTTP server.
 const server = restify.createServer();
@@ -65,6 +123,7 @@ server.listen(process.env.port || process.env.PORT || 3978, () => {
 // Listen for incoming requests.
 server.post("/api/messages", async (req, res) => {
   await adapter.process(req, res, async (context) => {
-    await bot.run(context);
+    //await bot.run(context);
+    await app.run(context);
   });
 });

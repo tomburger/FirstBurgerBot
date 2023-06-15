@@ -46,10 +46,5 @@ export async function SendApprovalsCard(apiKey: string, context: TurnContext) {
 export async function ProcessApprovalFromCard(apiKey: string,caseId: string, stepId: string, outcome: string, context: TurnContext) {
     const api = new GlaassApi(apiKey);
     api.PostApproval(caseId, stepId, outcome);
-    const card = AdaptiveCards.declare(rawApprovedCard).render({});
-    await context.updateActivity({
-        type: "message",
-        id: context.activity.replyToId,
-        attachments: [CardFactory.adaptiveCard(card)],
-    });
+    return AdaptiveCards.declare(rawApprovedCard).render({});
 }

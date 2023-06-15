@@ -22,6 +22,7 @@
     },
     "dependencies": {
         "@microsoft/adaptivecards-tools": "^1.0.0",
+        "@microsoft/teams-ai": "^0.1.0-preview.2",
         "botbuilder": "^4.17.0",
         "restify": "^10.0.0",
         "restify-clients": "^4.1.1"

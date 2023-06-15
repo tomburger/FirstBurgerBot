@@ -76,3 +76,4 @@ deploy:
         BOT_ID: ${{BOT_ID}}
         BOT_PASSWORD: ${{SECRET_BOT_PASSWORD}}
         GLAASS_API_KEY: ${{GLAASS_API_KEY}}
+        OPENAI_API_KEY: ${{SECRET_OPENAI_API_KEY}}

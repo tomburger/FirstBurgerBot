@@ -80,7 +80,12 @@ export class TeamsBot extends TeamsActivityHandler {
       const stepId: string = invokeValue.action.data.stepId as string;
       const outcome: string = invokeValue.action.data.outcome as string;
       if (outcome) {
-        await ProcessApprovalFromCard(this.glaassApiKey, caseId, stepId, outcome, context)
+        const card = await ProcessApprovalFromCard(this.glaassApiKey, caseId, stepId, outcome, context);
+        await context.updateActivity({
+            type: "message",
+            id: context.activity.replyToId,
+            attachments: [CardFactory.adaptiveCard(card)],
+        });
       }
       return { statusCode: 200, type: undefined, value: undefined };
     }
