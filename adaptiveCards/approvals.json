@@ -1,0 +1,46 @@
+{
+    "type": "AdaptiveCard",
+    "body": [
+      {
+        "type": "TextBlock",
+        "size": "Medium",
+        "weight": "Bolder",
+        "text": "Here are the workflows awaiting your approval"
+      },
+      {
+        "type": "FactSet",
+        "facts": [
+          { "title": "Case", "value": "${CaseTitle} (${Number})"},
+          { "title": "Step", "value": "${StepTitle}"}
+        ]
+      },
+      {
+        "type": "Input.ChoiceSet",
+        "id": "outcome",
+        "label": "Select Outcome",
+        "value": "",
+        "choices": [
+          {
+            "$data": "${Outcomes}",
+            "title": "${Label}",
+            "value": "${Id}"
+          }
+        ]
+      }
+    ],
+    "actions": [
+      {
+        "type": "Action.Execute",
+        "title": "Send",
+        "verb": "approved",
+        "data": {
+          "caseId": "${CaseId}",
+          "stepId": "${StepId}",
+          "outcome": "outcome"
+        }
+      }      
+    ],
+    "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+    "version": "1.4"
+  }
+  

@@ -6,21 +6,15 @@ import {
   AdaptiveCardInvokeResponse,
 } from "botbuilder";
 import rawWelcomeCard from "./adaptiveCards/welcome.json";
-import rawLearnCard from "./adaptiveCards/learn.json";
 import { AdaptiveCards } from "@microsoft/adaptivecards-tools";
-
-export interface DataInterface {
-  likeCount: number;
-}
+import { ProcessApprovalFromCard, SendApprovalsCard } from "./approvals";
+import { SendContextCard } from "./context";
 
 export class TeamsBot extends TeamsActivityHandler {
-  // record the likeCount
-  likeCountObj: { likeCount: number };
-
-  constructor() {
+  constructor(
+    private glaassApiKey: string,
+  ) {
     super();
-
-    this.likeCountObj = { likeCount: 0 };
 
     this.onMessage(async (context, next) => {
       console.log("Running with Message Activity.");
@@ -39,10 +33,14 @@ export class TeamsBot extends TeamsActivityHandler {
           await context.sendActivity({ attachments: [CardFactory.adaptiveCard(card)] });
           break;
         }
-        case "learn": {
-          this.likeCountObj.likeCount = 0;
-          const card = AdaptiveCards.declare<DataInterface>(rawLearnCard).render(this.likeCountObj);
-          await context.sendActivity({ attachments: [CardFactory.adaptiveCard(card)] });
+        case "context":
+        {
+          await SendContextCard(this.glaassApiKey, context);
+          break;
+        }
+        case "approvals":
+        {
+          await SendApprovalsCard(this.glaassApiKey, context);
           break;
         }
         /**
@@ -77,14 +75,13 @@ export class TeamsBot extends TeamsActivityHandler {
     invokeValue: AdaptiveCardInvokeValue
   ): Promise<AdaptiveCardInvokeResponse> {
     // The verb "userlike" is sent from the Adaptive Card defined in adaptiveCards/learn.json
-    if (invokeValue.action.verb === "userlike") {
-      this.likeCountObj.likeCount++;
-      const card = AdaptiveCards.declare<DataInterface>(rawLearnCard).render(this.likeCountObj);
-      await context.updateActivity({
-        type: "message",
-        id: context.activity.replyToId,
-        attachments: [CardFactory.adaptiveCard(card)],
-      });
+    if (invokeValue.action.verb === "approved") {
+      const caseId: string = invokeValue.action.data.caseId as string;
+      const stepId: string = invokeValue.action.data.stepId as string;
+      const outcome: string = invokeValue.action.data.outcome as string;
+      if (outcome) {
+        await ProcessApprovalFromCard(this.glaassApiKey, caseId, stepId, outcome, context)
+      }
       return { statusCode: 200, type: undefined, value: undefined };
     }
   }

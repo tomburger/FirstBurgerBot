@@ -5,24 +5,24 @@
       "type": "TextBlock",
       "size": "Medium",
       "weight": "Bolder",
-      "text": "Your Hello World Bot is Running"
+      "text": "Welcome to Glaass Pro"
     },
     {
       "type": "TextBlock",
-      "text": "Congratulations! Your hello world bot is running. Click the documentation below to learn more about Bots and the Teams Toolkit.",
+      "text": "This bot can help you to work with Glaass Pro, using just conversation in Teams. You can ask for 'approvals' and 'context' at the moment.",
       "wrap": true
     }
   ],
   "actions": [
     {
       "type": "Action.OpenUrl",
-      "title": "Bot Framework Docs",
-      "url": "https://docs.microsoft.com/en-us/azure/bot-service/?view=azure-bot-service-4.0"
+      "title": "Glaass Pro",
+      "url": "https://beta-app.glaass.net/"
     },
     {
       "type": "Action.OpenUrl",
-      "title": "Teams Toolkit Docs",
-      "url": "https://aka.ms/teamsfx-docs"
+      "title": "Glaass Web",
+      "url": "https://glaass.net/"
     }
   ],
   "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",

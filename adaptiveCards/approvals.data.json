@@ -1,0 +1,9 @@
+{
+    "Number": "CORRES-12",
+    "CaseTitle": "See this, Carina!",
+    "StepTitle": "Please, approve",
+    "Outcomes": [
+        { "Label": "Accepted" },
+        { "Label": "Rejected" }
+    ]
+}

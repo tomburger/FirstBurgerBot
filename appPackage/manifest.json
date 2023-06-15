@@ -5,22 +5,22 @@
     "id": "${{TEAMS_APP_ID}}",
     "packageName": "com.microsoft.teams.extension",
     "developer": {
-        "name": "Teams App, Inc.",
-        "websiteUrl": "https://www.example.com",
-        "privacyUrl": "https://www.example.com/termofuse",
-        "termsOfUseUrl": "https://www.example.com/privacy"
+        "name": "Glaass Pty Ltd",
+        "websiteUrl": "https://www.glaass.net/",
+        "privacyUrl": "https://www.glaass.net/privacy-policy/",
+        "termsOfUseUrl": "https://www.glaass.net/terms-conditions/"
     },
     "icons": {
         "color": "color.png",
         "outline": "outline.png"
     },
     "name": {
-        "short": "FirstBurgerBot-${{TEAMSFX_ENV}}",
-        "full": "full name for FirstBurgerBot"
+        "short": "GlaassBot-${{TEAMSFX_ENV}}",
+        "full": "Communication Bot for Glaass Pro"
     },
     "description": {
-        "short": "short description for FirstBurgerBot",
-        "full": "full description for FirstBurgerBot"
+        "short": "Communication Bot for Glaass Pro",
+        "full": "Communication Bot for Glaass Pro"
     },
     "accentColor": "#FFFFFF",
     "bots": [
@@ -46,8 +46,12 @@
                             "description": "Resend welcome card of this Bot"
                         },
                         {
-                            "title": "learn",
-                            "description": "Learn about Adaptive Card and Bot Command"
+                            "title": "approvals",
+                            "description": "Get a list of approvals for the Glaass project"
+                        },
+                        {
+                            "title": "context",
+                            "description": "Gives a context of the current Glaass environment"
                         }
                     ]
                 }

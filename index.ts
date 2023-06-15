@@ -53,7 +53,7 @@ const onTurnErrorHandler = async (context: TurnContext, error: Error) => {
 adapter.onTurnError = onTurnErrorHandler;
 
 // Create the bot that will handle incoming messages.
-const bot = new TeamsBot();
+const bot = new TeamsBot(config.glaassApiKey);
 
 // Create HTTP server.
 const server = restify.createServer();
