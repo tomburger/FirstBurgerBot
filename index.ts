@@ -16,7 +16,6 @@ import { TeamsBot } from "./teamsBot";
 import config from "./config";
 import { AI, Application, ConversationHistory, DefaultPromptManager, DefaultTurnState, OpenAIModerator, OpenAIPlanner } from "@microsoft/teams-ai";
 import path from "path";
-import { Console } from "console";
 import { SendContextCard } from "./context";
 import { ProcessApprovalFromCard, SendApprovalsCard } from "./approvals";
 
